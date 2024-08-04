@@ -1,6 +1,6 @@
 import { openDB } from 'idb';
 
-const initdb = async () => 
+const initdb = async () =>
   openDB('jate', 1, {
     upgrade(db) {
       if (db.objectStoreNames.contains('jate')) {
@@ -12,47 +12,40 @@ const initdb = async () =>
     },
   });
 
-// Add logic to a method that accepts some content and adds it to the database
+// TODO: Add logic to a method that accepts some content and adds it to the database
 export const putDb = async (content) => {
-  console.log('PUT to the database');
-
-  // Create a connection to the database database and version we want to use.
+  // for dev: logging route function to console
+  console.log('PUT to db');
+  // define db
   const jateDb = await openDB('jate', 1);
-
-  // Create a new transaction and specify the database and data privileges.
+  // define what transactions are allowed
   const tx = jateDb.transaction('jate', 'readwrite');
-
-  // Open up the desired object store.
+  // define jate as the stored object
   const store = tx.objectStore('jate');
-
-  // Use the .put() method on the store and pass in the content.
-  const request = store.put({ id: 1, content: content });
-
-  // Get confirmation of the request.
+  // define what our request will be (to update)
+  const request = store.put({ id: 1, jate: content });
+  // await the result of our request
   const result = await request;
-  console.log('🚀 - data saved to the database', result);
+  // for dev: log result of request
+  console.log('PUT data saved to db', result);
 };
 
-// Add logic for a method that gets all the content from the database
+// TODO: Add logic for a method that gets all the content from the database
 export const getDb = async () => {
-  console.log('GET from the database');
-
-  // Create a connection to the database database and version we want to use.
+  // for dev: logging route function to console
+  console.log('GET all from db');
+  // define db
   const jateDb = await openDB('jate', 1);
-
-  // Create a new transaction and specify the database and data privileges.
+  // define what transactions are allowed
   const tx = jateDb.transaction('jate', 'readonly');
-
-  // Open up the desired object store.
+  // define jate as the stored object
   const store = tx.objectStore('jate');
-
-  // Use the .getAll() method to get all data in the database.
+  // define what our request will be (to get all)
   const request = store.getAll();
-
-  // Get confirmation of the request.
+  // await the result of our request
   const result = await request;
+  // for dev: log result of request
   console.log('result.value', result);
-  return result;
 };
 
 initdb();

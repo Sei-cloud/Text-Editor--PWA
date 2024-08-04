@@ -1,5 +1,5 @@
 const { offlineFallback, warmStrategyCache } = require('workbox-recipes');
-const { CacheFirst, StaleWhileRevalidate } = require('workbox-strategies');
+const { CacheFirst } = require('workbox-strategies');
 const { registerRoute } = require('workbox-routing');
 const { CacheableResponsePlugin } = require('workbox-cacheable-response');
 const { ExpirationPlugin } = require('workbox-expiration');
@@ -26,18 +26,26 @@ warmStrategyCache({
 
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
-// Implement asset caching
+// TODO: Implement asset caching
 registerRoute(
-  ({ request }) => ['style', 'script', 'worker'].includes(request.destination),
-  new StaleWhileRevalidate({
+  // defining the criteria for the files we'll cache
+  ({ request }) => ['style', 'script', 'image'].includes(request.destination),
+  // directing the user to try to grab asset from cache first and then network second if none found
+  new CacheFirst({
+    // defining name of cached assets
     cacheName: 'asset-cache',
+    // plugins for caching
     plugins: [
+      // only caching successfully loaded assets
       new CacheableResponsePlugin({
         statuses: [0, 200],
       }),
+      // defining when cached assets will expire
       new ExpirationPlugin({
+        // 10 days
+        maxAgeSeconds: 10 * 24 * 60 * 60,
+        // only 60 cached assets at once in order to limit storage use
         maxEntries: 60,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
       }),
     ],
   })
