@@ -85,3 +85,8 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 ## Questions
 
 For questions about the project, please feel free to contact [Sei-Cloud](https://github.com/Sei-Cloud) or [Email me](mailto:rocketsei.009@gmail.com).
+
+## URL 
+Deployed URL: https://text-editor-pwa-leff.onrender.com/
+
+Github URL: https://github.com/Sei-cloud/Text-Editor--PWA
